@@ -9,18 +9,21 @@ const inputfile = fs.readFile('simple-input.txt', 'utf8' , (err, data) => {
     // filter to a new array
     const answer = input.filter(value => {
 
-    	// create a loop to loop through the required array of strings (the passport fields)
+        // create a loop to loop through the required array of strings (the passport fields)
     	for (i = 0; i < required.length; i++) {
 
-    		// if the current item of the required array is not on the passport, report false -> it won't be added to new filtered array
+    		console.log(required[i]);
+            // if the current item of the required array is not on the passport, report false -> it won't be added to new filtered array
     		if(!value.includes(required[i])) {
-    			return false;
+    			console.log(required[i], "NO INCLUDES");
+                return false;
     		}
     	}
 
     	// if all items from required array are present, report true! and it's added to answer array
     	return true;
     })
+    console.log(answer);
     console.log(answer.length);
  })
 
