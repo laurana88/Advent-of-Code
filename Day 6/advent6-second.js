@@ -24,9 +24,6 @@ const inputSubArrays = (arr) => {
 	return newSubArray;
 }
 
-// if it includes a letter, check that letter against other items in teh array, if it does, add to the count
-
-
 // Count Letter
 const countLetter = (arr) => {
 	// set up the comparison and variable to count against
