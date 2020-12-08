@@ -1,4 +1,4 @@
-// FIRST
+// SECOND - THIS IS STILL A WORK IN PROGRESS - CAN'T GET IT WORKING
 const fs = require("fs");
 
 let counter = 0;
