@@ -1,124 +1,104 @@
-// SECOND - THIS IS STILL A WORK IN PROGRESS - CAN'T GET IT WORKING
+// SECOND
 const fs = require("fs");
 
 let counter = 0;
+let bagNumber = 0;
+let children = '';
+let childrenArray = [];
+let bagColor = '';
+let numMultiply = 0;
+let temp = 0;
+let counterArray = [];
+let parentBag = 1;
+let childrenBag = 0;
 
-const inputfile = fs.readFile('simple-input.txt', 'utf8' , (err, data) => {
+const inputfile = fs.readFile('input.txt', 'utf8' , (err, data) => {
+    let input = data.split("\n");
+    let subArray = findColorCreateArray(input, "shiny gold");
+    subArray = addParenttoArray(subArray, 1);
+    const answer = loop(subArray, input, 1);
+    console.log(counter);
 
-	let tempNumber = 0;
-
-    const input = data.split("\n");
-    // const answer = testFunction(input, "shiny gold");
-    const bagRule = findColor(input, "shiny gold");
-    const subArray = createSubArray(bagRule);
-    console.log(bagRule);
-    console.log(subArray);
-    for (value of subArray) {
-    	let tempNumber = startCalculate(value);
-    	console.log(tempNumber);
-    	console.log(counter, "COUNT");
-    	let tempNumber2 = multiply(tempNumber, value);
-    }
-
-    // const answer = multiply(tempNumber,subArray);
-    // console.log(answer);
 })
 
-const testFunction = (arr, color) => {
+// loop through the items
+const loop = (arr, input, num) => {
+	console.log(arr);
+	counter += multiplyByParent(arr);
+	console.log(counter);
+	 for (bag of arr) {
+	 	// skip the last item in the array (the parent number)
+	 	if (bag.length === undefined) {
+	 	} else {
+	 		console.log(bag);
 
-	console.log(arr);	
-	let bag = [color];
-	let newColor = '';
-	let newBags = '';
-	let tempArray = [];
-	let number = '';
-	let count = 0;
+	 		//this checks to see if there are bags inside
+	    	if (/\d/.test(bag) !== true) {
+	    	} else {
+	    	bagColor = listColorName(bag);
+	    	bagNumber = startCalculate(bag);
 
-	// go through each color, colors will be added to it. start with the shiny gold in it
-	for (value of bag) {
-
-		// for each color, go through the whole input
-		for (i=0; i < arr.length; i ++) {
-
-			// this is the color before the word contain
-			compareColor = /^\w*\s\w*/.exec(arr[i]);
-
-			// does the string before contain include the color
-			if (compareColor.includes(value)) {
-				console.log(value, arr[i]);
-				newBags = /(?<=contain).+/.exec(arr[i]);
-				tempArray.push(newBags[0]);
-				
-				tempArray = tempArray.map(value => {
-					return value = value.split(",");
-				})
-
-				console.log(tempArray);
-				for (value of tempArray[0]) {
-					number = /\d/.exec(value);
-					bag = /\S{2,}\s\S+/.exec(value);
-					console.log(number[0], bag[0]);
-
-
-				}
+	    	// find the children of the bags inside
+			children = findColorCreateArray(input, bagColor);
+				if (children[0].length > 2 && /\d/.test(children[0]) === true) {
+					// if children bag, multply the bag number by the number its parent number
+					parentBag = num * bagNumber;
+					children = addParenttoArray(children, parentBag);
+					console.log(children);
+					loop(children,input, parentBag);
+	    		} 
 			}
-		}
-	}
+    	}
+    }
 }
 
-const testFunctionTwo = (arr,input) => {
-
-	let number = '';
-
-	for (value of arr) {
-		number = /\d/.exec(value);
-		bag = /\S{2,}\s\S+/.exec(value);
-
-		for (i=0; i<input.length; i++) {
-
-		}
-	}
-
-}
-
-// find the color in the array
-const findColor = (arr, color) => {
+// find color & create subarray
+const findColorCreateArray = (arr, color) => {
 	for (value of arr) {
 		// this is the color before the word contain
 		compareColor = /^\w*\s\w*/.exec(value);
 
+		// if it is that color, create an array of the bags it can contain
 		if (compareColor.includes(color)) {
-			return value;
+			let tempArray = [];
+			newBags = /(?<=contain).+/.exec(value);
+			tempArray.push(newBags[0]);
+			tempArray = tempArray[0].split(",");
+			return tempArray;
 		}
 	}
 }
 
-// create subarray based on the first color
-const createSubArray = (rule) => {
-	let tempArray = [];
-	newBags = /(?<=contain).+/.exec(rule);
-	tempArray.push(newBags[0]);
-
-	tempArray = tempArray.map(value => {
-		return value = value.split(",");
-	})
-
-	return tempArray[0];
+// add parent to the end of the arrayarray
+const addParenttoArray = (arr, num) => {
+	arr.push(num);
+	return arr;
 }
 
+// grab the number from the array item
 const startCalculate = (value) => {
 	let tempcount = 0;
 	number = /\d/.exec(value);
 	tempcount = Number(number[0]);
-	counter += Number(number[0]);
 	return tempcount;
 }
 
-const multiply = (value, arr) => {
-	console.log(value);
-	console.log(arr);
-	number = /\d/.exec(value);
-	let toMultiply = Number(number[0]);
-	console.log(toMultiply, "MUTLIPLY");
-	counter = counter + (value * toMultiply);
+// grab the color from the array item
+const listColorName = (value) => {
+	compareColor =/\S{2,}\s\S+/.exec(value);
+	return compareColor[0];
+}
+
+// add bags inside and multiply by parent
+const multiplyByParent = (arr) => {
+	let numberofBags = 0;
+
+	// skip the last item in the array (the parent number)
+	for (i=0; i < arr.length-1; i++) {
+		number = /\d/.exec(arr[i]);
+		numberofBags += Number(number[0]);
+	}
+	// add up the number and multiply by the parent (last item in the array)
+	numberofBags = numberofBags * arr[arr.length-1];
+	return numberofBags;
 }
