@@ -4,13 +4,7 @@ const fs = require("fs");
 let counter = 0;
 let bagNumber = 0;
 let children = '';
-let childrenArray = [];
 let bagColor = '';
-let numMultiply = 0;
-let temp = 0;
-let counterArray = [];
-let parentBag = 1;
-let childrenBag = 0;
 
 const inputfile = fs.readFile('input.txt', 'utf8' , (err, data) => {
     let input = data.split("\n");
