@@ -1,23 +1,56 @@
+// FIRST
+
+// import file and put into an array
+const fs = require("fs");
+const inputString = fs.readFileSync("input.txt").toString();
+const inputArray = inputString.split("\n")
+
 
 let accessedIndex = [];
+let index = 0;
+let acc = 0;
 
-const temp = (arr) => {
+// go through each value
+const mainFunction = (value, arr) => {
 
-	checkEachLine(arr[i][0],arr[i][1],i,arr);
-	accessedIndex.push(arr[i]);
-
-}
-
-
-const checkEachLine = (value, i, index, acc) => {
-
-	if (value = "acc") {
-		acc++;
-		index;
-	} else if(value = "jmp") {
-		index = i + index; 
-	} else if(value = "nop") {
-		index++;
+	if (accessedIndex.includes(index)) {
+		console.log(acc);
 	}
-
+	else {
+		accessedIndex.push(index);
+		index = updateIndex(value, index);
+		acc = updateAcc(value, acc);
+		mainFunction(arr[index], arr);
+	}
 }
+
+//update the index based on the line
+const updateIndex = (value, index) => {
+
+	if (value.includes("acc")) {
+		index++;
+		return index;
+	} 
+	else if(value.includes("jmp")) {
+		let jumpindex = /\W\d+/.exec(value);
+		index = index + Number(jumpindex[0]); 
+		return index;
+	} 
+	else if(value.includes("nop")) {
+		index++;
+		return index;
+	}
+}
+
+//update the acc based on the line
+const updateAcc = (value, acc) => {
+	if (value.includes("acc")) {
+		let tempacc = /\W\d+/.exec(value);
+		acc += Number(tempacc[0]);
+		return acc;
+	} else {
+		return acc;
+	}
+}
+
+mainFunction(inputArray[0], inputArray); 
